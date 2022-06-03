@@ -1,0 +1,63 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. "SUB_GET_ALL".
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT STUDENT-RECORD-FILE
+               ASSIGN TO "INDEX-STU-RECORD.TXT"
+               ORGANIZATION IS INDEXED
+               RECORD KEY IS STUDENT-NUMBER
+               ACCESS MODE IS SEQUENTIAL
+               FILE STATUS IS WS-FS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  STUDENT-RECORD-FILE
+           RECORD CONTAINS 80 CHARACTERS
+           BLOCK CONTAINS 800 CHARACTERS
+           RECORDING MODE IS F
+           DATA RECORD IS STUDENT-RECORD.
+       01 STUDENT-RECORD.
+           05 STUDENT-NUMBER  PIC 9(06).
+           05 STUDENT-NAME    PIC X(10).
+           05 STUDENT-SCORE    PIC 9(02).
+
+       WORKING-STORAGE SECTION.
+       01 WS-STUDENT-INFOR PIC X(50).
+       01 WS-STUDENT-RECORD.
+           05 WS-STUDENT-NUMBER  PIC 9(06).
+           05 WS-STUDENT-NAME    PIC X(10).
+           05 WS-STUDENT-SCORE    PIC 9(02).
+       77 WS-FS               PIC 9(02).
+       01 WS-EOF-SW           PIC X(01) VALUE 'N'.
+           88 EOF-SW           VALUE 'Y'.
+           88 NOT-EOF-SW       VALUE 'N'.
+
+       LINKAGE SECTION.
+       PROCEDURE DIVISION.
+       100-GET-ALL-STUDENTS.
+           PERFORM 200-OPEN-FILES.
+           PERFORM 101-READ-ALL-RECORDS.
+           PERFORM 201-CLOSE-FILES.
+
+       101-READ-ALL-RECORDS.
+           PERFORM UNTIL EOF-SW
+           READ STUDENT-RECORD-FILE
+           AT END MOVE 'Y' TO WS-EOF-SW
+           NOT END
+           DISPLAY "|"STUDENT-NUMBER"|"STUDENT-NAME"|"STUDENT-SCORE"|"
+           DISPLAY "----------------------"
+           END-PERFORM.
+
+       200-OPEN-FILES.
+           OPEN I-O STUDENT-RECORD-FILE.
+           DISPLAY "|NUMBER|   NAME   |SC|".
+           DISPLAY "----------------------".
+
+       201-CLOSE-FILES.
+           CLOSE STUDENT-RECORD-FILE.
+           MOVE 'N' TO WS-EOF-SW.
+           GOBACK.
+
+       END PROGRAM "SUB_GET_ALL".

@@ -1,0 +1,63 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. "SUB_SEARCH".
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT STUDENT-RECORD-FILE
+               ASSIGN TO "INDEX-STU-RECORD.TXT"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS RANDOM
+               RECORD KEY IS STUDENT-NUMBER
+               FILE STATUS IS WS-FS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  STUDENT-RECORD-FILE.
+       01 STUDENT-RECORD.
+           05 STUDENT-NUMBER  PIC 9(06).
+           05 STUDENT-NAME    PIC X(10).
+           05 STUDENT-SCORE    PIC 9(02).
+
+       WORKING-STORAGE SECTION.
+       01 WS-STUDENT-INFOR PIC X(50).
+       01 WS-STUDENT-RECORD.
+           05 WS-STUDENT-NUMBER  PIC 9(06).
+           05 WS-STUDENT-NAME    PIC X(10).
+           05 WS-STUDENT-SCORE    PIC 9(02).
+       77 WS-FS               PIC 9(02).
+
+       LINKAGE SECTION.
+       PROCEDURE DIVISION.
+       100-INIT.
+           PERFORM 200-OPEN-FILES.
+           PERFORM 201-SEARCH-FILES.
+           PERFORM 204-CLOSE-FILES.
+           GOBACK.
+
+       101-INPUT-NUMBER.
+           DISPLAY "STUDENT ID YOU WANT TO SEARCH?".
+           ACCEPT WS-STUDENT-NUMBER.
+
+       200-OPEN-FILES.
+           OPEN I-O STUDENT-RECORD-FILE.
+
+       201-SEARCH-FILES.
+           PERFORM 101-INPUT-NUMBER.
+           MOVE WS-STUDENT-NUMBER TO STUDENT-NUMBER.
+           READ STUDENT-RECORD-FILE
+                 KEY IS STUDENT-NUMBER
+                 INVALID KEY
+                    DISPLAY 'RECEORD KEY IS INVALID'
+                 NOT INVALID KEY
+           DISPLAY "|NUMBER|   NAME   |SC|"
+           DISPLAY "----------------------"
+           DISPLAY "|"STUDENT-NUMBER"|"STUDENT-NAME"|"STUDENT-SCORE"|"
+           DISPLAY "----------------------"
+           END-READ.
+
+       204-CLOSE-FILES.
+             CLOSE STUDENT-RECORD-FILE.
+
+
+       END PROGRAM "SUB_SEARCH".
