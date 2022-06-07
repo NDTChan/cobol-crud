@@ -6,7 +6,6 @@
        77 TRACK-MENU PIC 9.
        77 TRACK-MORE PIC X.
 
-
        PROCEDURE DIVISION.
 
        100-MAIN-MENU.
@@ -21,6 +20,10 @@
 
            ACCEPT TRACK-MENU.
 
+           IF TRACK-MENU EQUALS 3 OR 4
+               CALL "SEQUENTIAL_TO_INDEX"
+           END-IF.
+
            EVALUATE TRACK-MENU
            WHEN 1 CALL "SUB_GET_ALL"
            WHEN 2 CALL "SUB_ADD"
@@ -29,13 +32,14 @@
            WHEN 5 CALL "SUB_SEARCH"
            WHEN 6 CALL "SUB_AVG"
            WHEN 7 PERFORM 101-STOP-PROGRAM
-           WHEN OTHER
-           DISPLAY "WRONG NUMBER!!"
+           WHEN OTHER DISPLAY "WRONG NUMBER!!"
            END-EVALUATE.
 
+           IF TRACK-MENU EQUALS 2 OR 3 OR 4
+               CALL "INDEX_TO_SEQUENTIAL"
+           END-IF.
+
            PERFORM 102-GO-ON-MENU.
-
-
 
        101-STOP-PROGRAM.
            STOP RUN.
@@ -43,8 +47,8 @@
            DISPLAY "BACK TO MENU? Y/N"
            ACCEPT TRACK-MORE
 
-           IF TRACK-MORE EQUAL "Y"
            GO TO 100-MAIN-MENU
+           IF TRACK-MORE EQUAL "Y"
            ELSE
            PERFORM 101-STOP-PROGRAM
            END-IF.

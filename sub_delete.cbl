@@ -24,14 +24,11 @@
            05 WS-STUDENT-NUMBER  PIC 9(06).
            05 WS-STUDENT-NAME    PIC X(10).
            05 WS-STUDENT-SCORE    PIC 9(02).
-       01 CONTROL-FIELDS.
-           05 DICISION-FLAG    PIC X(3) VALUE "Y".
-           05 WS-EOF PIC A(1).
-
+           
        LINKAGE SECTION.
-
        PROCEDURE DIVISION.
        100-INIT.
+           PERFORM 101-INPUT-NUMBER.
            PERFORM 200-OPEN-FILES.
            PERFORM 201-READ-FILES.
            PERFORM 202-DELETE-STUDENT-RECORD.
@@ -46,12 +43,12 @@
            OPEN I-O STUDENT-RECORD-FILE.
 
        201-READ-FILES.
-           PERFORM 101-INPUT-NUMBER.
            MOVE WS-STUDENT-NUMBER TO STUDENT-NUMBER.
            READ STUDENT-RECORD-FILE INTO WS-STUDENT-RECORD
                  KEY IS STUDENT-NUMBER
                  INVALID KEY
-                    DISPLAY 'RECEORD KEY IS INVALID'
+                    DISPLAY "There is no Student's ID = " STUDENT-NUMBER
+                        GOBACK
                  NOT INVALID KEY
                    DISPLAY 'REC : ' WS-STUDENT-RECORD ' WILL BE DELETED'
            END-READ.
@@ -59,13 +56,13 @@
        202-DELETE-STUDENT-RECORD.
            DELETE STUDENT-RECORD-FILE RECORD
                 INVALID KEY
-                   DISPLAY 'RECEORD KEY IS INVALID'
+                  DISPLAY "There is no Student's ID = " STUDENT-NUMBER
+                       GOBACK
                 NOT INVALID KEY
                    DISPLAY 'REC DELETION SUCCESSFUL'
            END-DELETE.
 
        204-CLOSE-FILES.
-             CLOSE STUDENT-RECORD-FILE.
-
+           CLOSE STUDENT-RECORD-FILE.
 
        END PROGRAM "SUB_DELETE".

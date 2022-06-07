@@ -1,13 +1,11 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. "SUB_AVG".
+       PROGRAM-ID. SUB_AVG.
 
        ENVIRONMENT DIVISION.
            INPUT-OUTPUT SECTION.
            FILE-CONTROL.
                SELECT STUDENT ASSIGN TO
                'INDEX-STU-RECORD.TXT'
-                   *> ORGANISATION IS LINE SEQUENTIAL
-                   *> ACCESS IS SEQUENTIAL.
                    ORGANIZATION IS INDEXED
                    RECORD KEY IS STUDENT-NUMBER
                    ACCESS MODE IS SEQUENTIAL
@@ -40,38 +38,31 @@
            01 COUNTER PIC 9 VALUE 0.
 
            LINKAGE SECTION.
-       PROCEDURE DIVISION.
+           PROCEDURE DIVISION.
             OPEN INPUT STUDENT.
                PERFORM UNTIL WS-EOF='Y'
-                   READ STUDENT INTO WS-STUDENT-RECORD
-                       AT END MOVE 'Y' TO WS-EOF
-                       NOT AT END
-                           IF WS-STUDENT-NUMBER IS NUMERIC
-                            DISPLAY WS-STUDENT-NUMBER"-"WS-STUDENT-NAME"-"WS-STUDENT-SCORE
-                            COMPUTE WS-TOTAL-MARKS = WS-TOTAL-MARKS + WS-STUDENT-SCORE
-                            COMPUTE WS-COUNT = WS-COUNT + 1
-                           ELSE
-                            MOVE 'Y' TO WS-EXISTED-TOTAL
-                            MOVE 'Y' TO WS-EOF
-                           END-IF
-
-                   END-READ
+               READ STUDENT INTO WS-STUDENT-RECORD
+                   AT END MOVE 'Y' TO WS-EOF
+                   NOT AT END
+                       IF WS-STUDENT-NUMBER IS NUMERIC
+                        DISPLAY WS-STUDENT-NUMBER"-"WS-STUDENT-NAME
+                                               "-"WS-STUDENT-SCORE
+                        COMPUTE WS-TOTAL-MARKS = WS-TOTAL-MARKS 
+                                                + WS-STUDENT-SCORE
+                        COMPUTE WS-COUNT = WS-COUNT + 1
+                       ELSE
+                        MOVE 'Y' TO WS-EXISTED-TOTAL
+                        MOVE 'Y' TO WS-EOF
+                       END-IF
+               END-READ
                END-PERFORM.
            CLOSE STUDENT.
 
-           CALL 'CALCULATE_AVG' USING WS-TOTAL-MARKS, WS-COUNT, WS-AVG-MARKS.
+           CALL 'CALCULATE_AVG' 
+               USING WS-TOTAL-MARKS, WS-COUNT, WS-AVG-MARKS.
            DISPLAY '==========='.
            DISPLAY 'Count: 'WS-COUNT.
            DISPLAY 'Total marks: 'WS-TOTAL-MARKS.
            DISPLAY 'AVG: 'WS-AVG-MARKS.
-
-           *> IF WS-EXISTED-TOTAL NOT EQUAL'Y' THEN
-               *> OPEN EXTEND STUDENT
-                   *> MOVE 'TOTAL' TO STUDENT-AVG-NAME
-                   *> MOVE WS-AVG-MARKS TO STUDENT-AVG-SCORE
-                   *> WRITE STUDENT-AVG
-                   *> END-WRITE
-               *> CLOSE STUDENT
-           *> ELSE
-               *> DISPLAY 'else'
-       STOP RUN.
+           GOBACK.
+       END PROGRAM SUB_AVG.

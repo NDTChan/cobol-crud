@@ -20,14 +20,10 @@
            05 STUDENT-SCORE    PIC 9(02).
 
        WORKING-STORAGE SECTION.
-       01 WS-STUDENT-INFOR PIC X(50).
        01 WS-STUDENT-RECORD.
            05 WS-STUDENT-NUMBER  PIC 9(06).
            05 WS-STUDENT-NAME    PIC X(10).
            05 WS-STUDENT-SCORE    PIC 9(02).
-       01 CONTROL-FIELDS.
-           05 DICISION-FLAG    PIC X(3) VALUE "Y".
-           05 WS-EOF PIC A(1).
        77 WS-FS               PIC 9(02).
 
        LINKAGE SECTION.
@@ -56,7 +52,7 @@
            READ STUDENT-RECORD-FILE INTO WS-STUDENT-RECORD
                  KEY IS STUDENT-NUMBER
                  INVALID KEY
-                    DISPLAY 'RECEORD KEY IS INVALID'
+                    DISPLAY 'RECORD KEY IS INVALID'
                  NOT INVALID KEY
                     DISPLAY 'REC : ' WS-STUDENT-RECORD
            END-READ.
@@ -66,7 +62,7 @@
            MOVE WS-STUDENT-SCORE TO STUDENT-SCORE
            REWRITE STUDENT-RECORD
                 INVALID KEY
-                   DISPLAY 'RECEORD KEY IS INVALID'
+                   DISPLAY 'RECORD KEY IS INVALID'
                 NOT INVALID KEY
                    DISPLAY 'NEW REC : ' STUDENT-RECORD
            END-REWRITE.

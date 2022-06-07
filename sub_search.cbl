@@ -48,7 +48,7 @@
            READ STUDENT-RECORD-FILE
                  KEY IS STUDENT-NUMBER
                  INVALID KEY
-                    DISPLAY 'RECEORD KEY IS INVALID'
+                    DISPLAY 'RECORD KEY IS INVALID'
                  NOT INVALID KEY
            DISPLAY "|NUMBER|   NAME   |SC|"
            DISPLAY "----------------------"
